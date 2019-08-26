@@ -1,0 +1,21 @@
+language: generic
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t puneeth42/react-test -f ./client/Dockerfile.dev .
+script:
+    - docker run -e CI=true puneeth42/react-test npm run test -- --coverage
+after_success:
+    - docker build -t puneeth8994/multi-client ./client
+    - docker build -t puneeth8994/multi-nginx ./nginx
+    - docker build -t puneeth8994/multi-server ./server
+    - docker build -t puneeth8994/multi-worker ./worker
+    #Login to docker cli
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    #Push images
+    - docker push puneeth8994/multi-client
+    - docker push puneeth8994/multi-nginx
+    - docker push puneeth8994/multi-server
+    - docker push puneeth8994/multi-worker
