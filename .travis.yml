@@ -19,3 +19,17 @@ after_success:
     - docker push puneeth8994/multi-nginx
     - docker push puneeth8994/multi-server
     - docker push puneeth8994/multi-worker
+
+deploy:
+  provider: elasticbeanstalk
+  region: ap-south-1
+  app: multi-docker
+  env: MultiDocker-env
+  bucket_name: elasticbeanstalk-ap-south-1-213453026729
+  bucket_path: docker_multi
+  on:
+    branch: master
+  access_key_id:
+    secure: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: $AWS_SECRET_KEY
